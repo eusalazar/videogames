@@ -26,9 +26,10 @@ module.exports = (sequelize) => {
     rating: {
       type: DataTypes.DECIMAL,
     },
-    platforms: {
-      type: DataTypes.STRING,
+    createInBD: {
+      type: DataTypes.BOOLEAN,
       allowNull: false,
+      defaultValue: true
     },
     
   });

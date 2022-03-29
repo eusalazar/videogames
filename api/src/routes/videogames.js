@@ -1,40 +1,48 @@
-const { Router } = require ('express');
 const  axios  = require ('axios');
 const { Videogame, Genre } = require ('../db.js');
 const { VIDEOGAMES_API_KEY } = process.env;
 
-
-const router = Router();
 //ME TRAIGO TODOS LOS VIDEOJUEGOS DE LA API
 const getAllVideoGames = async () => {
-    const urlInfo = await axios.get(`https://api.rawg.io/api/games?key=${ VIDEOGAMES_API_KEY }`);
-    const parseGam = (e) => ({////creo quna fn y le paso r como parametro
+    let promesas = []
+    for (let index = 1; index < 5; index++) {
+        const promesa = axios.get(`https://api.rawg.io/api/games?key=${ VIDEOGAMES_API_KEY }&page_size=25&page=${index}`)
+        promesas.push(promesa);
+    }
+    
+    promesas = await Promise.all(promesas)
+    const results = []
+    promesas.map(e => results.push(...e.data.results))
+
+    const parseResult = (e) => ({////creo quna fn y le paso r como parametro
             id: e.id,
             name: e.name,
             image: e.background_image,
-            platform:e.platform?.map(e => e.platform.name),
+            platforms: e.platforms?.map(e => e.platform.name),
             genres: e.genres.map(e => e.name),
             rating:e.rating
    })
-   const data = await urlInfo.data.results.map(parseGam)
-    return data  
+    const apiData = results.map(parseResult)
+    const dbData = await Videogame.findAll()
+    return [...apiData, ...dbData]
 };
 
 //HAGO UN REQUEST A LA API CON NAME INGRESADO COMO QUERY 
 const getApi = async (name) => {
     const apiInfo = await axios.get(`https://api.rawg.io/api/games?search=${name}&key=${VIDEOGAMES_API_KEY}`)
+    
     try{
-    const parseGames = await apiInfo.data.results.map((e) => {
+    const results = await apiInfo.data.results.map((e) => {
         return {
             id: e.id,
             name: e.name,
             image: e.background_image,
-            platform:e.platform?.map(e => e.platform.name),
+            platform: e.platforms.map(e => e.platform.name).join(', '),
             genres: e.genres?.map(e => e.name),
             rating:e.rating
         }
     })
-    return parseGames;
+    return results;
     } catch (err) {
         console.log(err)
     }
@@ -74,6 +82,7 @@ const handler = async (req, res) =>{ //el query ?name(atributo)...(y lo q le pas
     const { name } = req.query; 
     const allVideoGames = await getAllVideoGames();
     if(name){
+        console.log("Corre aqui?")
         try{
             const searchName = await getAllName(name)
             if(searchName.length > 0){
@@ -85,6 +94,7 @@ const handler = async (req, res) =>{ //el query ?name(atributo)...(y lo q le pas
             console.log(err)
         }
     } else {
+        console.log("Corre alla la corren?")
         return res.send(allVideoGames)
 
     } 

@@ -1,0 +1,7 @@
+
+p.error {
+    display:block;
+    background:white;
+    transition:background 3s ease-in;
+}
+

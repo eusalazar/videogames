@@ -4,6 +4,8 @@ const { Router } = require('express');
 const videogames = require ('./videogames')
 const videogame = require ('./videogame')
 const genres = require ('./genres')
+const createGames = require ('./createvideogames')
+const getPlatforms = require('./platforms')
 
 
 
@@ -17,6 +19,8 @@ const router = Router();
  router.get('/videogames', videogames);
  router.get('/videogames/:id', videogame)
  router.get('/genres', genres)
+ router.post('/videogames', createGames)
+ router.get('/platforms', getPlatforms)
 
  
 
