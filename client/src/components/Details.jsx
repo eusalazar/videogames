@@ -29,7 +29,7 @@ export default function Details(props) {//paso props como parametro y puedo acce
                         <h2>Genero: {videogame.genres?.map(e => ( e.name? e.name : e))}</h2>
                         <h4>{videogame.rating}</h4>
                         <h4>{videogame.released}</h4>
-                        <p>{videogame.description}</p>
+                        <div dangerouslySetInnerHTML={{ __html: videogame.description }}></div>
                     </div>
                 )) 
                 

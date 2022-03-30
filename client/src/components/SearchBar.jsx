@@ -2,14 +2,11 @@ import React from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getNameVideoGames } from "../actions";
-import './SearchBar.css'
-
+import './SearchBar.css';
 
 export default function SearchBar() {
     const dispatch = useDispatch();
     const [name, setName] = useState('');
-    const errorMessage = useSelector(state => state.errorMessage)
-
 
     function handleInput(e) {
         e.preventDefault()
@@ -25,14 +22,13 @@ export default function SearchBar() {
 
 
     return (
-        <div>
+        <div className="search-bar">
             <input
             type = 'text'
             placeholder="Buscar.."
             onChange={(e) => handleInput(e)}
             />
-            <button type="submit" onClick={(e) => handleSubmit(e)}>Buscar</button>
-            {errorMessage && (<p>{errorMessage}</p>)}
+            <a onClick={(e) => handleSubmit(e)} className="neon-link no-reflect" id="search-button">Buscar</a>
         </div>
     )
 }

@@ -10,6 +10,7 @@ export const GET_ALL_PLATFORMS = 'GET_ALL_PLATFORMS';
 export const BY_RATING = 'BY_RATING';
 export const GET_DETAILS = 'GET_DETAILS'
 export const GET_NAME_VIDEOGAMES_FAILED = 'GET_NAME_VIDEOGAMES_FAILED'
+export const INICIAR_GET_ALL_VIDEOGAMES = 'INICIAR_GET_ALL_VIDEOGAMES'
 
 export function getByGenres(payload) {
     return async function(dispatch){
@@ -22,6 +23,9 @@ export function getByGenres(payload) {
 
 export function getVideogames(){
     return async function(dispatch){
+        dispatch({
+            type: INICIAR_GET_ALL_VIDEOGAMES
+        })
         const json = await axios.get("http://localhost:3001/videogames");
         return dispatch({
             type: GET_ALL_VIDEOGAMES,

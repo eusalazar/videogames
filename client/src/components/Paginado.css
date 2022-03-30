@@ -1,9 +1,23 @@
 .paginado{
     display: grid;
-    gap:1rem;
+    gap: 1rem;
     grid-auto-rows: 1rem;
     grid-template-columns: repeat(auto-fit, minmax(0.5rem,0.4rem));
     display: flex;
     justify-content: center;
     align-items: center;
-    }
+}
+
+.table {
+	display: table;   /* Allow the centering to work */
+	margin: 0 auto;
+}
+
+ul.horizontal-list {
+	list-style: none;
+	display: flex;
+}
+ul.horizontal-list li {
+    display: inline;
+    padding: 10px;
+}

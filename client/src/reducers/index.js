@@ -8,7 +8,8 @@ import { GET_ALL_VIDEOGAMES,
     POST,
     GET_ALL_PLATFORMS,
     BY_RATING,
-    GET_NAME_VIDEOGAMES_FAILED
+    GET_NAME_VIDEOGAMES_FAILED,
+    INICIAR_GET_ALL_VIDEOGAMES
     } from "../actions";
 
 const initialState = {
@@ -17,11 +18,9 @@ const initialState = {
     genres: [],
     platforms: [],
     details: [],
-    errorMessage: ''
+    errorMessage: '',
+    cargando: false
 };
-
-
-
 
  function rootReducer (state= initialState, action) {
     switch(action.type){
@@ -30,7 +29,14 @@ const initialState = {
                 ...state,
                 videogames: action.payload,
                 allVideogames: action.payload,
-               // errorMessage: ''
+               // errorMessage: '',
+               cargando: false
+            }
+        case INICIAR_GET_ALL_VIDEOGAMES:
+            console.log("ejecuta?")
+            return {
+                ...state,
+                cargando: true
             }
         case GET_GENRES:
             return {
@@ -43,7 +49,7 @@ const initialState = {
             if (action.payload === "All") {
                 return {...state, videogames: state.allVideogames }
             } else {
-                const videogames = state.allVideogames.filter(v => v.genres?.indexOf(action.payload) > -1 )
+                const videogames = state.allVideogames.filter(v => v.genres?.indexOf(action.payload) > -1 ) //cuand no encuentra el gro que le paso me devuelve indice -1 no existe
                 return {
                     ...state,
                     videogames

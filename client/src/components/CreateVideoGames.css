@@ -1,7 +1,98 @@
-
-p.error {
-    display:block;
-    background:white;
-    transition:background 3s ease-in;
+.create-video-games {
+    display: flex;
+    flex-direction: row;
+    margin:0;
+    padding:0;
+    font-family: sans-serif;
+    background: linear-gradient(#141e30, #243b55);
+}
+.header {
+    display: flex;
+    align-items: baseline;
+    margin: 40px;
+    flex-direction: column;
 }
 
+.form-contenedor {
+    flex: 2;
+    /* width: 400px; */
+    padding: 40px;
+    background: rgba(0,0,0,.5);
+    box-sizing: border-box;
+    box-shadow: 0 15px 25px rgba(0,0,0,.6);
+    border-radius: 10px;
+}
+
+.form-contenedor h1 {
+    margin: 0 0 30px;
+    padding: 0;
+    color: #03e9f4;
+    text-align: center;
+    filter: hue-rotate(270deg);
+}
+
+.form-contenedor .user-box {
+    position: relative;
+}
+
+.form-contenedor .user-box input {
+    width: 100%;
+    padding: 10px 0;
+    font-size: 16px;
+    color: white;
+    margin-bottom: 30px;
+    border: none;
+    border-bottom: 1px solid #03e9f4;
+    outline: none;
+    background: transparent;
+    filter: hue-rotate(270deg);
+}
+
+.form-contenedor .user-box label {
+    position: absolute;
+    top:0;
+    left: 0;
+    padding: 10px 0;
+    font-size: 16px;
+    color: #03e9f4;
+    pointer-events: none;
+    transition: .5s;
+    filter: hue-rotate(270deg);
+}
+
+.form-contenedor .user-box input:focus ~ label,
+.form-contenedor .user-box input:valid ~ label {
+    top: -20px;
+    left: 0;
+    color: #03e9f4;
+    font-size: 12px;
+}
+  
+.form-contenedor form a {
+    position: relative;
+    display: inline-block;
+    padding: 10px 20px;
+    box-shadow: 0 0 5px #03e9f4;
+    color: #03e9f4;
+    font-size: 16px;
+    text-decoration: none;
+    text-transform: uppercase;
+    overflow: hidden;
+    transition: .5s;
+    margin-top: 40px;
+    letter-spacing: 4px
+}
+  
+.form-contenedor a:hover {
+    color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 20px #03e9f4
+}
+
+.form-contenedor .error {
+    color: red;
+}
+
+.button-create {
+    filter: hue-rotate(270deg);
+}
