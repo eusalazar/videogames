@@ -32,8 +32,7 @@ const initialState = {
                // errorMessage: '',
                cargando: false
             }
-        case INICIAR_GET_ALL_VIDEOGAMES:
-            console.log("ejecuta?")
+        case INICIAR_GET_ALL_VIDEOGAMES:  //consultar
             return {
                 ...state,
                 cargando: true

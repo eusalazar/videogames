@@ -20,7 +20,7 @@ const getApiId = async (id) => {
 //OBTEGO EL ID LA BASE DE DATOS
 
 const getBdId = async (id) => {
-    const infoId = await Videogame.findByPk(id, {include: Genre});
+    const infoId = await Videogame.findByPk(id, {include: Genre});//obtiene la clave princ de la tabla
     return infoId
 };
 
@@ -35,7 +35,7 @@ const getAllId = async (id) => {
     return result;
 }
 
-//OBTENGO LA RUTA POR ID DE UN VIDEOJUGOS EN PARTICULAR 
+//OBTENGO LA RUTA POR ID DE UN VIDEOJUEGOS EN PARTICULAR 
 
 const handler = async (req, res) => {
     const { id } = req.params;

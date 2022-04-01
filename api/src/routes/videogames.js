@@ -1,5 +1,5 @@
 const  axios  = require ('axios');
-const { Videogame, Genre } = require ('../db.js');
+const { Videogame, Genre, Platforms} = require ('../db.js');
 const { VIDEOGAMES_API_KEY } = process.env;
 
 //ME TRAIGO TODOS LOS VIDEOJUEGOS DE LA API
@@ -23,8 +23,25 @@ const getAllVideoGames = async () => {
             rating:e.rating
    })
     const apiData = results.map(parseResult)
-    const dbData = await Videogame.findAll()
-    return [...apiData, ...dbData]
+    const dbData = await Videogame.findAll({
+        include: [
+            {
+                model: Genre,
+                attributes: ["name"],
+                through: {
+                    attributes: []
+                }
+            },
+            {
+                model: Platforms,
+                attributes: ["name"],
+                through: {
+                    attributes: []
+                }
+            }
+        ]
+    })
+    return [...apiData, ...dbData] //abro el array para tener toda la info en un solo array
 };
 
 //HAGO UN REQUEST A LA API CON NAME INGRESADO COMO QUERY 
@@ -54,13 +71,22 @@ const getBd = async (name) => {
         where: {
             name:name
         },
-        include: {
+        include: [ {
             model: Genre,
             attributes: ['name'],
             through: {
                 attributes: []
             }
-        }
+        },
+        {
+            model: Platforms,
+            attributes: ['name'],
+            through: {
+                attributes: []
+            }
+        },
+      
+    ]
     })
 } catch (err) {
     console.log(err)
@@ -82,7 +108,6 @@ const handler = async (req, res) =>{ //el query ?name(atributo)...(y lo q le pas
     const { name } = req.query; 
     const allVideoGames = await getAllVideoGames();
     if(name){
-        console.log("Corre aqui?")
         try{
             const searchName = await getAllName(name)
             if(searchName.length > 0){
@@ -94,7 +119,6 @@ const handler = async (req, res) =>{ //el query ?name(atributo)...(y lo q le pas
             console.log(err)
         }
     } else {
-        console.log("Corre alla la corren?")
         return res.send(allVideoGames)
 
     } 

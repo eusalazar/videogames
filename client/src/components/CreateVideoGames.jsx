@@ -1,42 +1,35 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch} from 'react-redux';
-import { Link,} from 'react-router-dom';
+import { Link, useNavigate} from 'react-router-dom';
 import { getGenres, getPlatforms,postVideoGames } from '../actions';
 import './CreateVideoGames.css'
 
-function validate(input, inputName) {
+function validate(input) {
     let errors = {}
-    console.log(input)
-    if (input.name.length < 1 && inputName === 'name') {
+    if (!input.name) {
         errors.name = "Se requiere un nombre"
-    } else if(inputName === 'name') {
-        errors.name = null;
     }
-    if (!input.description && inputName === 'description') {
+    if (!input.description) {
         errors.description = "Complete la descripcion"
-    } else if (inputName === 'description') {
-        errors.description = null;
-    }
-    if (!input.released && inputName === 'released') {
-        errors.released = "Complete la fecha lanzamiento"
-    } else if (inputName === 'released') {
-        errors.released = null;
-    }
-    if (inputName === 'rating' && !input.rating || input.rating > 5 || input.rating < 0) {
-        errors.rating = "Puntuacion valida de 0 - 5"
-    } else if (inputName === 'rating') {
-        errors.rating = null;
-    }
-    if (input.genres < 1 && inputName === 'genres') {
-        errors.genres = "Ingrese genero"
-    } else if (inputName === 'genres') {
-        errors.genres = null;
-    }
-    if (input.platforms.length < 1 && inputName === 'platforms' ) {
-        errors.platforms = "Ingrese plataforma"
+    } 
+    if (!input.released) {
+        errors.released =  "Complete la fecha lanzamiento"
+    } else if (!/^(?:3[01]|[12][0-9]|0?[1-9])([\-/.])(0?[1-9]|1[1-2])\1\d{4}$/.test(input.released)) { //expresion regular
+        errors.released = 'Formato admitido dd/mm/aaaa';
     } else {
-        errors.platforms = null;
+        errors.released = ""
+    }
+    if (!input.rating || input.rating > 5 || input.rating < 0) {
+        errors.rating = "Puntuacion valida de 0 - 5"
+    } 
+    if (input.genres < 1) {
+        errors.genres = "Ingrese genero"
+    } else {
+        errors.platforms = ""
+    }
+    if (!input.platforms.length) {
+        errors.platforms = "Ingrese plataforma"
     }
     return errors
 }
@@ -45,6 +38,7 @@ export default function CreatedGames() {
     const dispatch = useDispatch();
     const genres = useSelector(e => e.genres)
     const platforms = useSelector(e => e.platforms)
+    const navegar = useNavigate();
     const [errors, setErrors] = useState({})
     const [input, setInput] = useState({ //inicializo las propiedades del componente para guardar la info del formulario
         name: '',
@@ -54,65 +48,62 @@ export default function CreatedGames() {
         rating: '',
         platforms: [],
         genres: []
-    
     })
 
-    
     function handleChange(e) {
+        setErrors(validate({
+            ...input,
+            [e.target.name]: e.target.value
+        }))
         setInput({
             ...input,
-            [e.target.name] : e.target.value
+            [e.target.name]: e.target.value
         })
-        const allErrors = validate(
-            {
-            ...input,
-            [e.target.name] : e.target.value
-            }, e.target.name
-        ) 
-        setErrors( 
-            {
-                ...errors,  // todos los errores anteriores
-                ...allErrors
-            } 
-        )
-    
-    };
-
+    }
+    //-----Seleccionar Genero------
     function handleGenreSelect(e) {
-        const genres = [...input.genres]
-        if(genres.indexOf(e.target.value) > 0) return null; 
-        genres.push(e.target.value)
         setInput({
             ...input,
-            genres
+            genres: [...input.genres, e.target.value]
         })
-    };
-
+        setErrors(validate({
+            ...input,
+            [e.target.genres]: e.target.value
+        }))
+    }
+    //-----Seleccionar Plataforma-----
     function handlePlatformsSelect(e) {
-        const platforms = [...input.platforms]
-        if(platforms.indexOf(e.target.value) > 0) return null; 
-        platforms.push(e.target.value)
         setInput({
             ...input,
-            platforms
+            platforms: [...input.platforms, e.target.value]
         })
-    };
-
+        setErrors(validate({
+            ...input,
+            [e.target.platforms]: e.target.value
+        }))
+    }
+    //-----Enviar formulario-----
     function handleSubmit(e) {
-        e.preventDefault();
-        dispatch(postVideoGames(input))
-        alert("Personaje creado!")
-        setInput({
-            name: '',
-            image: '',
-            description: '',
-            released: '',
-            rating: '',
-            platforms: [],
-            genres: []
-        })
-    };
-
+        if (errors.name || errors.description || errors.platforms || errors.rating || errors.genres ) {
+            e.preventDefault()
+            alert("Completar correctamente el formulario")
+        } else {
+            e.preventDefault();
+            dispatch(postVideoGames(input))
+            setInput({
+                name: "",
+                image: "",
+                description: "",
+                platforms: "",
+                released: "",
+                rating: "",
+                genres: [],
+                platforms: [] //eslint-disable-line
+            })
+            navegar('/home')
+        }
+    }
+    //-----Eliminar plataforma-----
     function handlePlatformDelete(platform, event) {
         event.preventDefault();
         setInput({
@@ -120,7 +111,7 @@ export default function CreatedGames() {
             platforms: input.platforms.filter((el) => el !== platform )
         })
     }
-
+    //-----Eliminar genero-----
     function handleGenreDelete(genre, event) {
         event.preventDefault()
         setInput({
@@ -160,6 +151,11 @@ export default function CreatedGames() {
                         required='required'
                         ></input>
                         <label>Imagen</label>
+                        {
+                            errors.image && (
+                                <span className="error"> {errors.image} </span>
+                            )
+                        }
                     </div>
                     <div className="user-box">
                         <input
@@ -213,7 +209,7 @@ export default function CreatedGames() {
                             {
                                 input.genres?.map((genre) => (
                                     <li>
-                                        {genre} <button onClick={(event) => handleGenreDelete(genre, event)}>X</button>
+                                        <h3 className="color">{genre}</h3> <button onClick={(event) => handleGenreDelete(genre, event)}>X</button>
                                     </li>
                                 ))
                             }
@@ -221,7 +217,7 @@ export default function CreatedGames() {
 
                         {
                             errors.genres && (
-                                <p> {errors.genres} </p>
+                                <span className="error"> {errors.genres} </span>
                             )
                         }
                     </div>
@@ -238,7 +234,7 @@ export default function CreatedGames() {
                             {
                                 input.platforms?.map((platform) => (
                                     <li>
-                                        {platform}
+                                       <h3 className="color">{platform}</h3>
                                         <button onClick={(e) => handlePlatformDelete(platform, e)}>
                                             X
                                         </button>
@@ -249,7 +245,7 @@ export default function CreatedGames() {
 
                         {
                             errors.platforms && (
-                                <p> {errors.platforms} </p>
+                                <span className="error"> {errors.platforms} </span>
                             )
                         }
                     </div>

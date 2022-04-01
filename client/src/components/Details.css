@@ -1,0 +1,19 @@
+.detail {
+    display: flex;
+    flex-direction: row;
+    background: linear-gradient(#141e30, #243b55);
+    justify-content: center;
+}
+
+.detail-contenedor {
+    color: white;
+}
+
+.link-contenedor {
+    
+}
+:root {
+    --background-gradient: linear-gradient(30deg, #f39c12 30%, #f1c40f);
+    --gray: #34495e;
+    --darkgray: #2c3e50;
+  }

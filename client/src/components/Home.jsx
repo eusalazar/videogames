@@ -20,35 +20,35 @@ export default function Home() {
     const [gamesPerPage, setGamesPerPage] = useState(15)
     const indexOfLastGame = currentPage * gamesPerPage //15- ultimo indic de cada pagina van cambiando,para poder pag la siguiente
     const indexOfFirstGame = indexOfLastGame - gamesPerPage //0-de el 1er indice de cada pag xq van cambiando
-    const currentGames = allVideogames.slice(indexOfFirstGame, indexOfLastGame )
+    const currentGames = allVideogames.slice(indexOfFirstGame, indexOfLastGame ) 
 
     const paginado = (pageNumber) => {
         setCurrentPage(pageNumber)
     }
 
-    useEffect(() => { //esto sucede cdo el componente componentDidMount(montaj)Update(actual)WillUnmount(desmonta).
+    useEffect(() => {
         dispatch(getGenres())
-        dispatch(getVideogames())  //esta func se ejecuta cada vez que elc com se renderiza muestra los videojuegos cada vez q el compon se monta
-     },[dispatch])                //evitta q se genere un bucle infinito de llamados
+        dispatch(getVideogames())  
+     },[dispatch])                
 
 
      function handleClick(e) {
-        e.preventDefault(); //es para cdo recargue la pagina no se pierda nada de lo que teniamos 
+        e.preventDefault();  
         dispatch(getVideogames())  
     };
-
+    //-----Filtro por genero-----
     function handleFilterByGenre(e) {
-        e.preventDefault(); //es para cdo recargue la pagina no se pierda nada de lo que teniamos 
+        e.preventDefault(); 
         dispatch(getByGenres(e.target.value))  
     };
-
+    //-----Ordenamiento------
     function handleSort(e) {
         e.preventDefault();
         dispatch(byOrder(e.target.value))
         setCurrentPage(1);
         setOrder(`ordenado ${e.target.value}`)
     };
-
+    //-----Creo el videojuego----
     function handleCreated(e) {
         e.preventDefault();
         dispatch(created(e.target.value))
@@ -57,17 +57,17 @@ export default function Home() {
     function handleRating(e) {
         dispatch(byRating(e.target.value))
     }
-
-    function splitArray(array, length) {
-        const parte = []
-        let i = 0 
-        const n = array.length;
-        while (i < n) {
-          parte.push(array.slice(i, i += length));
+    //------crea las filas-----                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+    function crearFilas(games, subdividir) { //parametros
+        const resultado = []
+        let contador = 0 
+        const totalGames = games.length;
+        while (contador < totalGames) {//Bandera
+          resultado.push(games.slice(contador, contador += subdividir));
         }
-        return parte;
+        return resultado;
     }
-
+    //-----Defino la carta---
     function renderCard(game) {
         return (
             <div className="card neon-card no-reflect">
@@ -75,7 +75,7 @@ export default function Home() {
                 <span></span>
                 <span></span>
                 <span></span>
-                <Link to={'/details/' + game.id}>
+                <Link to={'/videogames/' + game.id}>
                     <Card name={game.name}
                         image={game.image}
                         key={game.id}
@@ -85,18 +85,18 @@ export default function Home() {
             </div>
         )
     }
-
+    //-----Muestro la carta----
     function renderFilaDeJuegos (array) {  
         return (
             <div className="fila">
-                { array.map(renderCard) }
+                { array.map(videogame => renderCard(videogame)) }
             </div>
         )
     }
 
     function renderCargando () {
         return (
-            <div className="loading">
+            <div className="cargando">
                <Link to='#' className="neon-link">
                     <span></span>
                     <span></span>
@@ -169,7 +169,7 @@ export default function Home() {
                 </div>
             </>
         )
-
+    }
 
     function renderContenido() {
         return (
@@ -185,7 +185,7 @@ export default function Home() {
         )
     }
 
-    const gamesInChunk = splitArray(currentGames, 3)
+    const gamesInChunk = crearFilas(currentGames, 3)
 
      return(
          <div className={cargando ? 'home cargando' : 'home'}>

@@ -20,7 +20,7 @@ function App() {
           <Route exact path='/' element={<LandingPage/>} />
           <Route exact path='/home' element={<Home/>} />
           <Route exact path='/videogames' element={<CreatedViedeoGames/>}/>
-          <Route path='/details/:id' element={<Details />}/>
+          <Route path='/videogames/:id' element={<Details />}/>
         </Routes>
         </Provider>
       </div>

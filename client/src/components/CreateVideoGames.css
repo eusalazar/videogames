@@ -96,3 +96,6 @@
 .button-create {
     filter: hue-rotate(270deg);
 }
+.color {
+    color:#fff
+}
