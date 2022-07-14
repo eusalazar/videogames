@@ -6,7 +6,7 @@ import { getVideogames, getGenres, getByGenres,byOrder, created, byRating } from
 import Card from "./Card";
 import Paginado from "./Paginado";
 import SearchBar from "./SearchBar";
-import './home.css'
+import './Home.css'
 
 export default function Home() {
     const dispatch = useDispatch();

@@ -15,7 +15,7 @@ function validate(input) {
     } 
     if (!input.released) {
         errors.released =  "Complete la fecha lanzamiento"
-    } else if (!/^(?:3[01]|[12][0-9]|0?[1-9])([\-/.])(0?[1-9]|1[1-2])\1\d{4}$/.test(input.released)) { //expresion regular
+    } else if (!/^(?:3[01]|[12][0-9]|0?[1-9])([-/.])(0?[1-9]|1[1-2])\1\d{4}$/.test(input.released)) { //expresion regular
         errors.released = 'Formato admitido dd/mm/aaaa';
     } else {
         errors.released = ""
